@@ -9,26 +9,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by usuario on 5/12/16.
  */
-public class EuroMillonesModel {
+public class BonoLotoModel {
     private List<Integer> winnerCombination;
-    private List<Integer> stars;
+    private List<Integer> smallNum;
 
     public Double totalBets=0.0;
     public Double collection=0.0;
     public Double jackpot=0.0;
     public Double prizes=0.0;
 
-    public EuroMillonesModel() {
+    public BonoLotoModel() {
         this.winnerCombination = new ArrayList<Integer>();
-        this.stars = new ArrayList<Integer>();
+        this.smallNum = new ArrayList<Integer>();
     }
 
-    public boolean addStar(Integer integer) {
-        return stars.add(integer);
+    public boolean addSmallNum(Integer integer) {
+        return smallNum.add(integer);
     }
 
     public boolean addNumber(Integer integer) {
@@ -39,7 +38,7 @@ public class EuroMillonesModel {
     public String toString() {
         return "EuroMillonesModel{" + "\n" +
                 "winnerCombination=" + winnerCombination + "\n" +
-                ", stars=" + stars + "\n" +
+                ", stars=" + smallNum + "\n" +
                 ", totalBets=" + String.format("%.2f",totalBets) + "\n" +
                 ", collection=" + String.format("%.2f",collection) + "\n" +
                 ", jackpot=" + String.format("%.2f",jackpot) + "\n" +
@@ -49,7 +48,7 @@ public class EuroMillonesModel {
 
     public void getLastResult() throws IOException {
         // Visit web euromillons
-        String url="http://www.loteriasyapuestas.es/es/euromillones";
+        String url="http://www.loteriasyapuestas.es/es/bonoloto";
         Document doc = Jsoup.connect(url).get();
         // Get url for last result with details
         Element ele = doc.getElementById("lastResultsTitleLink");
@@ -73,10 +72,9 @@ public class EuroMillonesModel {
         }
 
         //Get Stars
-        link = doc.getElementById("stars");
-        datos = link.getElementsByTag("li");
+        datos = doc.getElementsByClass("bolapeq");
         for (Element dato:datos) {
-            this.addStar(Integer.parseInt(dato.text()));
+            this.addSmallNum(Integer.parseInt(dato.text()));
         }
     }
 
