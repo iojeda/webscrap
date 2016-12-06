@@ -1,5 +1,11 @@
 package models;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +39,48 @@ public class EuroMillonesModel {
         return "EuroMillonesModel{" + "\n" +
                 "winnerCombination=" + winnerCombination.toString() + "\n" +
                 ", stars=" + stars.toString() + "\n" +
-                ", totalBets=" + totalBets.toString() + "\n" +
-                ", recaudation=" + collection.toString() + "\n" +
-                ", bote=" + jackpot.toString() + "\n" +
-                ", rewards=" + prizes.toString()+ "\n" +
+                ", totalBets=" + totalBets + "\n" +
+                ", collection=" + collection + "\n" +
+                ", jackpot=" + jackpot + "\n" +
+                ", prizes=" + prizes + "\n" +
                 '}';
+    }
+
+    public void getLastResult() throws IOException {
+        // Visit web euromillons
+        String url="http://www.loteriasyapuestas.es/es/euromillones";
+        Document doc = Jsoup.connect(url).get();
+        // Get url for last result with details
+        Element ele = doc.getElementById("lastResultsTitleLink");
+        url = ele.attr("abs:href");
+        doc = Jsoup.connect(url).get(); // Visit web and extract info
+        Element link = doc.getElementsByClass("cuerpoRegionSup").last();
+        Elements datos = link.getElementsByTag("p");
+
+        //Get interesting info about bets
+        this.totalBets=getDouble(datos.get(0).text());
+        this.collection=getDouble(datos.get(1).text());
+        this.jackpot=getDouble(datos.get(2).text());
+        this.prizes=getDouble(datos.get(3).text());
+
+        //Get Winner combination
+        link = doc.getElementById("mainNumbers");
+        datos = link.getElementsByTag("li");
+
+        for (Element dato : datos) {
+            this.addNumber(Integer.parseInt(dato.text()));
+        }
+
+        //Get Stars
+        link = doc.getElementById("stars");
+        datos = link.getElementsByTag("li");
+        for (Element dato:datos) {
+            this.addStar(Integer.parseInt(dato.text()));
+        }
+    }
+
+    public static Double getDouble (String str){
+        str = str.replaceAll("[^0-9 | ^\\,]", "").replace(",",".");
+        return Double.parseDouble(str);
     }
 }
