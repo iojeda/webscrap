@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by usuario on 5/12/16.
  */
-public class BonoLotoModel {
+public class PrimitivaModel {
     private List<Integer> winnerCombination;
     private List<Integer> smallNum;
 
@@ -20,8 +20,9 @@ public class BonoLotoModel {
     public Double collection=0.0;
     public Double jackpot=0.0;
     public Double prizes=0.0;
+    public Integer jocker=0;
 
-    public BonoLotoModel() {
+    public PrimitivaModel() {
         this.winnerCombination = new ArrayList<Integer>();
         this.smallNum = new ArrayList<Integer>();
     }
@@ -36,9 +37,10 @@ public class BonoLotoModel {
 
     @Override
     public String toString() {
-        return "BonoLotoModel{" + "\n" +
+        return "PrimitivaModel{" + "\n" +
                 "winnerCombination=" + winnerCombination + "\n" +
                 ", stars=" + smallNum + "\n" +
+                ", jocker=" + jocker + "\n" +
                 ", totalBets=" + String.format("%.2f",totalBets) + "\n" +
                 ", collection=" + String.format("%.2f",collection) + "\n" +
                 ", jackpot=" + String.format("%.2f",jackpot) + "\n" +
@@ -48,7 +50,7 @@ public class BonoLotoModel {
 
     public void getLastResult() throws IOException {
         // Visit web euromillons
-        String url="http://www.loteriasyapuestas.es/es/bonoloto";
+        String url="http://www.loteriasyapuestas.es/es/la-primitiva";
         Document doc = Jsoup.connect(url).get();
         // Get url for last result with details
         Element ele = doc.getElementById("lastResultsTitleLink");
@@ -76,10 +78,19 @@ public class BonoLotoModel {
         for (Element dato:datos) {
             this.addSmallNum(Integer.parseInt(dato.text()));
         }
+
+        //Get Joker
+        link = doc.getElementsByClass("numero").first();
+        this.jocker = getInteger(link.text());
     }
 
     public static Double getDouble (String str){
         str = str.replaceAll("[^0-9 | ^\\,]", "").replace(",",".");
         return Double.parseDouble(str);
+    }
+
+    public static Integer getInteger (String str){
+        str = str.replaceAll("\\s+","");
+        return Integer.parseInt(str);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by usuario on 5/12/16.
  */
-public class BonoLotoModel {
+public class GordoPrimitivaModel {
     private List<Integer> winnerCombination;
     private List<Integer> smallNum;
 
@@ -21,7 +21,7 @@ public class BonoLotoModel {
     public Double jackpot=0.0;
     public Double prizes=0.0;
 
-    public BonoLotoModel() {
+    public GordoPrimitivaModel() {
         this.winnerCombination = new ArrayList<Integer>();
         this.smallNum = new ArrayList<Integer>();
     }
@@ -36,7 +36,7 @@ public class BonoLotoModel {
 
     @Override
     public String toString() {
-        return "BonoLotoModel{" + "\n" +
+        return "GordoPrimitivaModel{" + "\n" +
                 "winnerCombination=" + winnerCombination + "\n" +
                 ", stars=" + smallNum + "\n" +
                 ", totalBets=" + String.format("%.2f",totalBets) + "\n" +
@@ -48,7 +48,7 @@ public class BonoLotoModel {
 
     public void getLastResult() throws IOException {
         // Visit web euromillons
-        String url="http://www.loteriasyapuestas.es/es/bonoloto";
+        String url="http://www.loteriasyapuestas.es/es/gordo-primitiva";
         Document doc = Jsoup.connect(url).get();
         // Get url for last result with details
         Element ele = doc.getElementById("lastResultsTitleLink");
